@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import events from './events.json';
 import Week from './Week.js';
-// import $ from 'jquery';
+import $ from 'jquery';
 import './App.css';
 
 class App extends Component {
@@ -23,47 +23,49 @@ class App extends Component {
     this.monthIncrement = this.monthIncrement.bind(this);
     this.getFirstDayOfMonth = this.getFirstDayOfMonth.bind(this);
     this.getArrayOfWeeks = this.getArrayOfWeeks.bind(this);
-    // this.fetch = this.fetch.bind(this);
+    this.fetch = this.fetch.bind(this);
     this.months =  {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
     this.weekDays = {'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6, 'Sat': 7};
   }
 
   componentDidMount () {
     console.log('MOUNTED!');
-    // this.fetch(events => {
-    //   console.log('FETCH:', fetch);
-    // });
+    this.fetch(events => {
+      console.log('FETCH:', events);
+      this.getCurrentTime((currentTime) => {
+        this.setState({
+          currentTime: currentTime,
+          events: events
+        });
+      });      
+    });
     // fetch('/events')
     // .then(data => {
     //   console.log('JSON:', data.json());
     // }).catch(err => {
     //   console.log('ERR:', err)
     // })
-    this.getCurrentTime((currentTime) => {
-      this.setState({
-        currentTime: currentTime
-      });
-    });
+
   }
 
-  // fetch (cb) {
-  //   $.ajax({
-  //     url: '/events',
-  //     type: 'GET',
-  //     dataType: 'json',
-  //     success: (events) => {
-  //       cb(events);
-  //     },
-  //     // success: (repos) => { --- Alternate better way
-  //     //   this.setState({
-  //     //     repos: repos
-  //     //   });
-  //     // },
-  //     error: function (xhr, err) {
-  //       console.log('err', err);
-  //     }
-  //   })
-  // }
+  fetch (cb) {
+    $.ajax({
+      url: '/events',
+      type: 'GET',
+      dataType: 'json',
+      success: (events) => {
+        cb(events);
+      },
+      // success: (repos) => { --- Alternate better way
+      //   this.setState({
+      //     repos: repos
+      //   });
+      // },
+      error: function (xhr, err) {
+        console.log('err', err);
+      }
+    })
+  }
 
   getCurrentTime (cb) {
     const currentTime = moment().format('llll');
@@ -156,7 +158,7 @@ class App extends Component {
   }
 
   render() {
-    console.log('STATE:', this.state.currentTime);
+    console.log('STATE:', this.state.currentTime, this.state.events);
     let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
     console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);
       // let currentDay = moment().format('llll');
