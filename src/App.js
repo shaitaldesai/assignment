@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import events from './events.json';
-// import Week from './Week.js';
+import Week from './Week.js';
 import './App.css';
 
 class App extends Component {
@@ -21,11 +21,13 @@ class App extends Component {
     this.monthDecrement = this.monthDecrement.bind(this);
     this.monthIncrement = this.monthIncrement.bind(this);
     this.getFirstDayOfMonth = this.getFirstDayOfMonth.bind(this);
+    this.getArrayOfWeeks = this.getArrayOfWeeks.bind(this);
     this.months =  {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sept': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
     this.weekDays = {'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6};
   }
 
   componentDidMount () {
+    console.log('MOUNTED!');
     this.getCurrentTime((currentTime) => {
       this.setState({
         currentTime: currentTime
@@ -49,11 +51,12 @@ class App extends Component {
 
   getMonth () {
     let monthStr = this.state.currentTime.slice(5, 8);
+    console.log('MONTHSTR:', monthStr);
     let month = this.months[monthStr];
     if (month < 10) {
       return `0${month}`;
     } else {
-      return month;
+      return `${month}`;
     }
   }
 
@@ -92,21 +95,49 @@ class App extends Component {
     return this.weekDays[firstDay];
   }
 
+  getArrayOfWeeks () {
+    let month = this.getMonth();
+    let year = this.getYear();
+    let numberOfDaysInMonth = this.getDaysInMonth(year, month);
+    console.log('NUMBEROFDAYS:', month, year);
+    let daysArr = [];
+    for (var i = 0; i < numberOfDaysInMonth; i++) {
+      daysArr[i] = i + 1;
+    }
+    let weeksArr = [];
+    while (daysArr.length > 7) {
+      let arr = daysArr.splice(0, 7);
+      weeksArr.push(arr);
+    }
+    if (daysArr.length > 0) {
+      weeksArr.push(daysArr);
+    }
+    return weeksArr;
+    console.log('WEEKSARR:', weeksArr);
+    console.log('NUMBEROFDAYS:', numberOfDaysInMonth);    
+  }
+
   render() {
-      let currentDay = moment().format('llll');
-      console.log('CURRENT:', currentDay);
-      let daysInMonth = this.getDaysInMonth(this.getYear(), this.getMonth());
-      console.log('DAYSINMONTH:', this.getYear(), this.getMonth(), daysInMonth);
-      let date = this.getMonth() + this.getDate() + this.getYear();
-      date = moment(date, "MMDDYYYY").subtract(1, 'months').format('llll');
-      // date = moment(date, "MMDDYYYY").format('llll');
-      console.log('DATE:', date);
+    console.log('INRENDER:', this.state.currentTime);
+      // let currentDay = moment().format('llll');
+      // console.log('CURRENT:', currentDay);
+      // let daysInMonth = this.getDaysInMonth(this.getYear(), this.getMonth());
+      // console.log('DAYSINMONTH:', this.getYear(), this.getMonth(), daysInMonth);
+      // let date = this.getMonth() + this.getDate() + this.getYear();
+      // date = moment(date, "MMDDYYYY").subtract(1, 'months').format('llll');
+      // // date = moment(date, "MMDDYYYY").format('llll');
+      // date = this.getArrayOfWeeks();
+      // console.log('DATE:', date);
     return (
       <div className='wrapper'>
         <div className='bar'> 
           <button onClick={() => this.monthDecrement()}>{'<'}</button> 
-          <span>{`${this.getMonthStr()} ${this.getYear()}`}</span> 
+          <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
           <button onClick={() => this.monthIncrement()}>{'>'}</button> 
+          <Week arrOfWeeks={this.getArrayOfWeeks()} />
+        </div>
+        <div>
+
         </div>
       </div>
     );
