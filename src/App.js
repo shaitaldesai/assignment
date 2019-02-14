@@ -9,7 +9,12 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      currentTime: moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
+      currentTime: moment().format('llll'),
+      // currentTime: window.location.pathname ? moment(`${window.location.pathname}`, "/YYYY/MM").format('llll') : moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
+      // url: window.location.pathname ? window.location.pathname : null,
+      // url: window.location.pathname ? 
+      // `/events?year=${window.location.pathname.slice(1, 5)}&month=${window.location.pathname.slice(6)}` : 
+      // `/events?year=${this.getYear()}&month=${this.getMonth()}`,
       events: []
     }
     this.getCurrentTime = this.getCurrentTime.bind(this);
@@ -30,25 +35,42 @@ class App extends Component {
   }
 
   componentDidMount () {
-    console.log('MOUNTED!');
-    this.fetch(events => {
+    console.log('MOUNTED!')
+    let pathName = window.location.pathname;
+    let url;
+    let time;
+    //determining url and currentTime for fetch function
+    if (moment(pathName, "/YYYY/MM").format(pathName) === pathName) { 
+      let year = pathName.split('/')[1];
+      let month = pathName.split('/')[2];
+      url = `/events?year=${year}&month=${month}`;  
+      time = moment(pathName, "/YYYY/MM").format('llll');
+    } else {
+      url = `/events?year=${this.getYear()}&month=${this.getMonth()}`;
+      // time = this.state.currentTime;
+      time = moment().format('llll');
+    }
+    console.log('URL:', url);
+    //
+    this.fetch(url, events => {
       console.log('FETCH:', events);
-        this.setState({
-          events: events
-        });
-      // if (window.pushState) {
-        window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
-      // } else {
-      //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
-      // }
+      this.setState({
+        currentTime: time,
+        events: events
+      });
+      window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+      console.log('URL:', window.location);
     });
+      // window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
   }
 
-  fetch (cb) {
-    let year = this.getYear();
-    let month = this.getMonth();
+  fetch (url, cb) {
+    // let year = this.getYear();
+    // let month = this.getMonth(); 
     $.ajax({
-      url: `/events?year=${year}&month=${month}`,
+      url: url,
+      // url: `/events?year=${this.state.url.slice(1, 5)}&month=${this.state.url.slice(6)}` || `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+      // url: this.state.url,
       type: 'GET',
       dataType: 'json',
       success: (events) => {
@@ -89,7 +111,12 @@ class App extends Component {
   }
 
   getYear () {
-    return this.state.currentTime.slice(13, 17);
+    return this.state.currentTime.split(' ')[3];
+    // if (this.getDate() < 10) {
+    //   return this.state.currentTime.slice(12, 16);
+    // } else {
+    //   return this.state.currentTime.slice(13, 17);
+    // }
   }
 
   getDaysInMonth (year, month) {
@@ -107,6 +134,7 @@ class App extends Component {
       console.log('PREV:', prev);
       $.ajax({
         url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        // url: this.state.url,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
@@ -140,6 +168,7 @@ class App extends Component {
       console.log('PREV:', prev);
       $.ajax({
         url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        // url: this.state.url,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
@@ -201,7 +230,9 @@ class App extends Component {
   }
 
   render() {
-    console.log('STATE:', this.state);
+    // console.log('MOMENT:', moment('/abcd/02', "/YYYY/MM").format('/YYYY/MM') === '/abcd/02', moment('/abcd/02', "/YYYY/MM").format('/YYYY/MM'));
+    // console.log('DATE:', this.getDate('Tue, Feb 2, 2019 5:09 PM'))
+    // console.log('LOCATION:', window.location.pathname ? moment(`${window.location.pathname}`, "/YYYY/MM").format('llll') : moment().format('llll'));
     // console.log('FORMATTED STATE:',  this.state.events[0].launch_date.slice(5, 7), this.getEventsByMonth());
     // let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
     // console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);

@@ -9,49 +9,25 @@
   grid-template-rows: minmax(7);
 }
 .one {
-  border: 1px solid;
+  border: 1px solid #ADD8E6;
   min-height: 100px;
   overflow: auto;
   font-size: .75em;
   font-weight: 500;
 }
 .two { 
-  border: 2px solid;
+  border: 2px solid #9bc2cf;
   min-height: 50px;
   text-align: center;
   font-weight: 700;
   padding-top: 10%;
-}
-.three {
-  grid-column: 3 / 7;
-  grid-row: 1;
-  border: 2px solid;
-}
-.four {
-  grid-column: 4 / 7;
-  grid-row: 1;
-  border: 2px solid;
-}
-.five {
-  grid-column: 5 / 7;
-  grid-row: 1;
-  border: 2px solid;
-}
-.six {
-  grid-column: 6 / 7;
-  grid-row: 1;
-  border: 2px solid;
-}
-.seven {
-  grid-column: 7 / 7;
-  grid-row: 1;
-  border: 2px solid;
+  color: #67818a;
 }
 .bar {
   margin-bottom: 2%;
 }
 .button {
-  background-color: #D3D3D3;
+  background-color: #ADD8E6;
   font-weight: 700;
   font-size: 1.25em;
   margin: 1%;
