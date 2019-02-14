@@ -49,7 +49,7 @@ class App extends Component {
         this.setState({
           events: events
         });
-    
+      window.location.hash = `${this.getYear()}/${this.getMonth()}`;   
     });
   }
 
@@ -128,6 +128,7 @@ class App extends Component {
           this.setState({
             events: events
           })
+        window.location.hash = `${this.getYear()}/${this.getMonth()}`;
         },
         error: function (xhr, err) {
           console.log('err', err);
@@ -156,13 +157,14 @@ class App extends Component {
           this.setState({
             events: events
           })
+        window.location.hash = `${this.getYear()}/${this.getMonth()}`;
         },
         error: function (xhr, err) {
           console.log('err', err);
         }
       })
     })
-    // window.location.hash = 'xyz';
+    // window.location.hash = `${year}/${month}`;
     console.log('After-INCREMENT:', currentState);
   }
 
@@ -222,9 +224,9 @@ class App extends Component {
     return (
       <div className='wrapper'>
         <div className='bar'> 
-          <button onClick={() => this.monthDecrement()}>{'<'}</button> 
+          <button className='button' onClick={() => this.monthDecrement()}>{'<'}</button> 
           <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
-          <button onClick={() => this.monthIncrement()}>{'>'}</button> 
+          <button className='button' onClick={() => this.monthIncrement()}>{'>'}</button> 
           <Week arrOfWeeks={this.getArrayOfWeeks()} startOfMonth={this.getFirstDayOfMonth} events={this.state.events} />
         </div>
         <div>

@@ -43,17 +43,57 @@ const Week = ({ startOfMonth, arrOfWeeks, events }) => {
     return eventTitle;
   };
 
+  $("div.row > div > text:empty").css( "background", "grey" );
+
   return (
     <div>
       <div className="row">
-        <div className="one">{'Sun'}</div>
+        <div className="two">{'Sun'}</div>
         <div className="two">{'Mon'}</div>
-        <div className="three">{'Tue'}</div>
-        <div className="four">{'Wed'}</div>
-        <div className="five">{'Thu'}</div>
-        <div className="six">{'Fri'}</div>
-        <div className="seven">{'Sat'}</div>
+        <div className="two">{'Tue'}</div>
+        <div className="two">{'Wed'}</div>
+        <div className="two">{'Thu'}</div>
+        <div className="two">{'Fri'}</div>
+        <div className="two">{'Sat'}</div>
       </div>
+      {arrOfWeeks.map(week => (
+        <div className="row" key={week.toString()}>
+          <div className="one">
+            {findCellsToBePopulated(week[0])}
+            <div>{findEventsForDay(week[0])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[1])}
+            <div>{findEventsForDay(week[1])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[2])}
+            <div>{findEventsForDay(week[2])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[3])}
+            <div>{findEventsForDay(week[3])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[4])}
+            <div>{findEventsForDay(week[4])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[5])}
+            <div>{findEventsForDay(week[5])}</div>
+          </div>
+          <div className="one">
+            {findCellsToBePopulated(week[6])}
+            <div>{findEventsForDay(week[6])}</div>
+          </div>
+        </div>
+      ))}
+  </div>) 
+}
+
+export default Week;
+
+/**
       {arrOfWeeks.map(week => (
         <div className="row" key={week.toString()}>
           <div className="one">
@@ -86,8 +126,5 @@ const Week = ({ startOfMonth, arrOfWeeks, events }) => {
           </div>
         </div>
       ))}
-  </div>) 
-}
-
-export default Week;
+  </div>) **/
 
