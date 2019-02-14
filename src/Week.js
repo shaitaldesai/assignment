@@ -43,7 +43,7 @@ const Week = ({ startOfMonth, arrOfWeeks, events }) => {
     return eventTitle;
   };
 
-  $("div.row > div > text:empty").css( "background", "grey" );
+  $("div.one:empty").css( "background", "grey" );
 
   return (
     <div>
