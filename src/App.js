@@ -29,19 +29,6 @@ class App extends Component {
     this.weekDays = {'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6, 'Sat': 7};
   }
 
-  // componentDidMount () {
-  //   console.log('MOUNTED!');
-  //   this.fetch(events => {
-  //     console.log('FETCH:', events);
-  //     this.getCurrentTime((currentTime) => {
-  //       this.setState({
-  //         currentTime: currentTime,
-  //         events: events
-  //       });
-  //     });      
-  //   });
-  // }
-
   componentDidMount () {
     console.log('MOUNTED!');
     this.fetch(events => {
@@ -49,7 +36,11 @@ class App extends Component {
         this.setState({
           events: events
         });
-      window.location.hash = `${this.getYear()}/${this.getMonth()}`;   
+      // if (window.pushState) {
+        window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+      // } else {
+      //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
+      // }
     });
   }
 
@@ -63,11 +54,6 @@ class App extends Component {
       success: (events) => {
         cb(events);
       },
-      // success: (repos) => { --- Alternate better way
-      //   this.setState({
-      //     repos: repos
-      //   });
-      // },
       error: function (xhr, err) {
         console.log('err', err);
       }
@@ -115,7 +101,6 @@ class App extends Component {
     let month = this.getMonth();
     let date = this.getDate();
     let year = this.getYear();
-    // var date = this.getMonth() + this.getDate() + this.getYear();
     let day = `${month}${date}${year}`;
     let currentState = moment(day, "MMDDYYYY").subtract(1, 'months').format('llll');
     this.setState({currentTime: currentState}, (prev, prop) => {
@@ -128,14 +113,18 @@ class App extends Component {
           this.setState({
             events: events
           })
-        window.location.hash = `${this.getYear()}/${this.getMonth()}`;
-        },
+          // if (window.pushState) {
+            window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+            // window.history.pushState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+          // } else {
+          //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
+          // }
+          },
         error: function (xhr, err) {
           console.log('err', err);
         }
       })
     })
-    // window.location.hash = `${year}/${month}`;
     console.log('After-DECREMENT:', currentState);
   }
 
@@ -157,14 +146,18 @@ class App extends Component {
           this.setState({
             events: events
           })
-        window.location.hash = `${this.getYear()}/${this.getMonth()}`;
+          // if (window.pushState) {
+            window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+            // window.history.pushState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+          // } else {
+          //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
+          // }
         },
         error: function (xhr, err) {
           console.log('err', err);
         }
       })
     })
-    // window.location.hash = `${year}/${month}`;
     console.log('After-INCREMENT:', currentState);
   }
 
