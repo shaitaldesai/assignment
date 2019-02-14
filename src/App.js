@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import events from './events.json';
+// import events from './events.json';
 import Week from './Week.js';
 import $ from 'jquery';
 import './App.css';
@@ -9,8 +9,8 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      currentTime: '', // sample format: Tue, Feb 12, 2019 5:09 PM
-      events: events.data
+      currentTime: moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
+      events: []
     }
     this.getCurrentTime = this.getCurrentTime.bind(this);
     this.getDay = this.getDay.bind(this);
@@ -24,33 +24,40 @@ class App extends Component {
     this.getFirstDayOfMonth = this.getFirstDayOfMonth.bind(this);
     this.getArrayOfWeeks = this.getArrayOfWeeks.bind(this);
     this.fetch = this.fetch.bind(this);
+    // this.getEventsByMonth = this.getEventsByMonth.bind(this);
     this.months =  {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
     this.weekDays = {'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6, 'Sat': 7};
   }
+
+  // componentDidMount () {
+  //   console.log('MOUNTED!');
+  //   this.fetch(events => {
+  //     console.log('FETCH:', events);
+  //     this.getCurrentTime((currentTime) => {
+  //       this.setState({
+  //         currentTime: currentTime,
+  //         events: events
+  //       });
+  //     });      
+  //   });
+  // }
 
   componentDidMount () {
     console.log('MOUNTED!');
     this.fetch(events => {
       console.log('FETCH:', events);
-      this.getCurrentTime((currentTime) => {
         this.setState({
-          currentTime: currentTime,
           events: events
         });
-      });      
+    
     });
-    // fetch('/events')
-    // .then(data => {
-    //   console.log('JSON:', data.json());
-    // }).catch(err => {
-    //   console.log('ERR:', err)
-    // })
-
   }
 
   fetch (cb) {
+    let year = this.getYear();
+    let month = this.getMonth();
     $.ajax({
-      url: '/events',
+      url: `/events?year=${year}&month=${month}`,
       type: 'GET',
       dataType: 'json',
       success: (events) => {
@@ -105,20 +112,57 @@ class App extends Component {
   }
 
   monthDecrement () {
-    var date = this.getMonth() + this.getDate() + this.getYear();
-    let currentState = moment(date, "MMDDYYYY").subtract(1, 'months').format('llll');
-    this.setState({
-      currentTime: currentState
+    let month = this.getMonth();
+    let date = this.getDate();
+    let year = this.getYear();
+    // var date = this.getMonth() + this.getDate() + this.getYear();
+    let day = `${month}${date}${year}`;
+    let currentState = moment(day, "MMDDYYYY").subtract(1, 'months').format('llll');
+    this.setState({currentTime: currentState}, (prev, prop) => {
+      console.log('PREV:', prev);
+      $.ajax({
+        url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        type: 'GET',
+        dataType: 'json',
+        success: (events) => {
+          this.setState({
+            events: events
+          })
+        },
+        error: function (xhr, err) {
+          console.log('err', err);
+        }
+      })
     })
+    // window.location.hash = `${year}/${month}`;
     console.log('After-DECREMENT:', currentState);
   }
 
   monthIncrement () {
-    var date = this.getMonth() + this.getDate() + this.getYear();
-    let currentState = moment(date, "MMDDYYYY").add(1, 'months').format('llll');
-    this.setState({
-      currentTime: currentState
+    let month = this.getMonth();
+    let date = this.getDate();
+    let year = this.getYear();
+    let day = `${month}${date}${year}`;
+    let currentState = moment(day, "MMDDYYYY").add(1, 'months').format('llll');
+    year = this.getYear();
+    month = this.getMonth();
+    this.setState({currentTime: currentState}, (prev, prop) => {
+      console.log('PREV:', prev);
+      $.ajax({
+        url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        type: 'GET',
+        dataType: 'json',
+        success: (events) => {
+          this.setState({
+            events: events
+          })
+        },
+        error: function (xhr, err) {
+          console.log('err', err);
+        }
+      })
     })
+    // window.location.hash = 'xyz';
     console.log('After-INCREMENT:', currentState);
   }
 
@@ -131,12 +175,16 @@ class App extends Component {
   getArrayOfWeeks () {
     let month = this.getMonth();
     let year = this.getYear();
+    let firstDayOfMonth = this.getFirstDayOfMonth() - 1;
     console.log('YEAR:', year, 'MONTH:', month);
     let numberOfDaysInMonth = this.getDaysInMonth(year, month);
     let daysArr = [];
     for (var i = 0; i < numberOfDaysInMonth; i++) {
       daysArr[i] = i + 1;
     }
+  for (let i = 0; i < firstDayOfMonth; i++) {
+    daysArr.unshift('');
+  }
     let weeksArr = [];
     while (daysArr.length > 7) {
       let arr = daysArr.splice(0, 7);
@@ -158,9 +206,10 @@ class App extends Component {
   }
 
   render() {
-    console.log('STATE:', this.state.currentTime, this.state.events);
-    let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
-    console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);
+    console.log('STATE:', this.state);
+    // console.log('FORMATTED STATE:',  this.state.events[0].launch_date.slice(5, 7), this.getEventsByMonth());
+    // let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
+    // console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);
       // let currentDay = moment().format('llll');
       // console.log('CURRENT:', currentDay);
       // let daysInMonth = this.getDaysInMonth(this.getYear(), this.getMonth());
@@ -176,7 +225,7 @@ class App extends Component {
           <button onClick={() => this.monthDecrement()}>{'<'}</button> 
           <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
           <button onClick={() => this.monthIncrement()}>{'>'}</button> 
-          <Week arrOfWeeks={this.getArrayOfWeeks()} startOfMonth={this.getFirstDayOfMonth} />
+          <Week arrOfWeeks={this.getArrayOfWeeks()} startOfMonth={this.getFirstDayOfMonth} events={this.state.events} />
         </div>
         <div>
 
