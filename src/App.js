@@ -173,7 +173,7 @@ class App extends Component {
     for (let i = 0; i < firstDayOfMonth; i++) {
       arrayOfDaysInMonth.unshift('');
     }
-    //iterating over arrayOfDaysInMonth to create arrayOfWeeks until number of days left in arrayOfDaysInMonth is less than seven days, then creating a new array by filling the extra spaces with empty string to make array of seven, then pushing this new array into arrayOfWeeks to finish the last array
+    //iterating over arrayOfDaysInMonth to create arrayOfWeeks until number of days left in arrayOfDaysInMonth is less than seven days, then creating a new array by filling the extra spaces with empty string to make array of seven elements, then pushing this new array into arrayOfWeeks to finish the last array
     while (arrayOfDaysInMonth.length > 7) {
       let arr = arrayOfDaysInMonth.splice(0, 7);
       arrayOfWeeks.push(arr);
