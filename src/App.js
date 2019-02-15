@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-// import events from './events.json';
 import Month from './Month.js';
 import $ from 'jquery';
 import './App.css';
@@ -9,18 +8,18 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      currentTime: moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
+      currentTime: moment().format('llll'), // date format chosen: Tue, Feb 12, 2019 5:09 PM
       events: []
     }
-    this.getCurrentTime = this.getCurrentTime.bind(this);
-    this.getDay = this.getDay.bind(this);
+
+    this.getCurrentDay = this.getCurrentDay.bind(this);
     this.getDate = this.getDate.bind(this);
-    this.getMonth = this.getMonth.bind(this);
-    this.getMonthStr = this.getMonthStr.bind(this);
-    this.getYear = this.getYear.bind(this);
-    this.getDaysInMonth = this.getDaysInMonth.bind(this);
-    this.monthDecrement = this.monthDecrement.bind(this);
-    this.monthIncrement = this.monthIncrement.bind(this);
+    this.getCurrentMonth = this.getCurrentMonth.bind(this);
+    this.getCurrentMonthWord = this.getCurrentMonthWord.bind(this);
+    this.getCurrentYear = this.getCurrentYear.bind(this);
+    this.getTotalDaysInMonth = this.getTotalDaysInMonth.bind(this);
+    this.monthDecrementClickHandler = this.monthDecrementClickHandler.bind(this);
+    this.monthIncrementClickHandler = this.monthIncrementClickHandler.bind(this);
     this.getFirstDayOfMonth = this.getFirstDayOfMonth.bind(this);
     this.getArrayOfWeeks = this.getArrayOfWeeks.bind(this);
     this.fetch = this.fetch.bind(this);
@@ -29,22 +28,21 @@ class App extends Component {
   }
 
   componentDidMount () {
-    console.log('MOUNTED!')
-    let pathName = window.location.pathname;
+    //sets state for currentTime and events
     let url;
     let time;
-    //determining url and currentTime for fetch function
+    //determining url to use in fetch function; and currentTime to set the state
+    //implementing url driven calendar, if there is date in address url bar then use it to set the state otherwise use current time to set the state
+    let pathName = window.location.pathname;
     if (moment(pathName, "/YYYY/MM").format(pathName) === pathName) { 
       let year = pathName.split('/')[1];
       let month = pathName.split('/')[2];
       url = `/events?year=${year}&month=${month}`;  
       time = moment(pathName, "/YYYY/MM").format('llll');
     } else {
-      url = `/events?year=${this.getYear()}&month=${this.getMonth()}`;
-      // time = this.state.currentTime;
+      url = `/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`;
       time = moment().format('llll');
     }
-    console.log('URL:', url);
     //
     this.fetch(url, events => {
       console.log('FETCH:', events);
@@ -52,11 +50,11 @@ class App extends Component {
         currentTime: time,
         events: events
       });
-      window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+      window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
       console.log('URL:', window.location);
     });
   }
-
+  //fetching events json data from node server
   fetch (url, cb) {
     $.ajax({
       url: url,
@@ -71,12 +69,7 @@ class App extends Component {
     })
   }
 
-  getCurrentTime (cb) {
-    const currentTime = moment().format('llll');
-    cb(currentTime);
-  }
-
-  getDay () {
+  getCurrentDay () {
     return this.state.currentTime.slice(0, 3);
   }
  
@@ -84,7 +77,7 @@ class App extends Component {
     return this.state.currentTime.slice(9, 11);
   }
 
-  getMonth () {
+  getCurrentMonth () {
     let monthStr = this.state.currentTime.slice(5, 8);
     let month = this.months[monthStr];
     if (month < 10) {
@@ -94,36 +87,36 @@ class App extends Component {
     }
   }
 
-  getMonthStr () {
+  getCurrentMonthWord () {
     return this.state.currentTime.slice(5, 8);
   }
 
-  getYear () {
+  getCurrentYear () {
     return this.state.currentTime.split(' ')[3];
   }
 
-  getDaysInMonth (year, month) {
+  getTotalDaysInMonth (year, month) {
     console.log('DAYSINMONTH:', new Date(year, month, 0).getDate());
     return new Date(year, month, 0).getDate();
   }
 
-  monthDecrement () {
-    let month = this.getMonth();
+  monthDecrementClickHandler () {
+    let month = this.getCurrentMonth();
     let date = this.getDate();
-    let year = this.getYear();
+    let year = this.getCurrentYear();
     let day = `${month}${date}${year}`;
     let currentState = moment(day, "MMDDYYYY").subtract(1, 'months').format('llll');
     this.setState({currentTime: currentState}, (prev, prop) => {
       console.log('PREV:', prev);
       $.ajax({
-        url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        url: `/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
           this.setState({
             events: events
           })
-          window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+          window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
           },
         error: function (xhr, err) {
           console.log('err', err);
@@ -133,79 +126,79 @@ class App extends Component {
     console.log('After-DECREMENT:', currentState);
   }
 
-  monthIncrement () {
-    let month = this.getMonth();
+  monthIncrementClickHandler () {
+    let month = this.getCurrentMonth();
     let date = this.getDate();
-    let year = this.getYear();
+    let year = this.getCurrentYear();
     let day = `${month}${date}${year}`;
     let currentState = moment(day, "MMDDYYYY").add(1, 'months').format('llll');
-    year = this.getYear();
-    month = this.getMonth();
+    year = this.getCurrentYear();
+    month = this.getCurrentMonth();
     this.setState({currentTime: currentState}, (prev, prop) => {
       console.log('PREV:', prev);
       $.ajax({
-        url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+        url: `/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
           this.setState({
             events: events
           })
-          window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
+          window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
         },
         error: function (xhr, err) {
           console.log('err', err);
         }
       })
     })
-    console.log('After-INCREMENT:', currentState);
   }
-
+  //determining wich day of the week, the first day of the current month falls on
   getFirstDayOfMonth () {
     let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
     return this.weekDays[firstDay];
   }
 
   getArrayOfWeeks () {
-    let month = this.getMonth();
-    let year = this.getYear();
+    let month = this.getCurrentMonth();
+    let year = this.getCurrentYear();
     let firstDayOfMonth = this.getFirstDayOfMonth() - 1;
-    console.log('YEAR:', year, 'MONTH:', month);
-    let numberOfDaysInMonth = this.getDaysInMonth(year, month);
-    let daysArr = [];
+    let numberOfDaysInMonth = this.getTotalDaysInMonth(year, month);
+    let arrayOfDaysInMonth = [];
+    let arrayOfWeeks = [];
+    //populating arrayOfDaysInMonth
     for (var i = 0; i < numberOfDaysInMonth; i++) {
-      daysArr[i] = i + 1;
+      arrayOfDaysInMonth[i] = i + 1;
     }
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    daysArr.unshift('');
-  }
-    let weeksArr = [];
-    while (daysArr.length > 7) {
-      let arr = daysArr.splice(0, 7);
-      weeksArr.push(arr);
+    //filling up leading spaces in month for months that do not start on Sunday
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      arrayOfDaysInMonth.unshift('');
     }
-    if (daysArr.length > 0) {
+    //iterating over arrayOfDaysInMonth to create arrayOfWeeks until number of days left in arrayOfDaysInMonth is less than seven days, then creating a new array by filling the extra spaces with empty string to make array of seven, then pushing this new array into arrayOfWeeks to finish the last array
+    while (arrayOfDaysInMonth.length > 7) {
+      let arr = arrayOfDaysInMonth.splice(0, 7);
+      arrayOfWeeks.push(arr);
+    }
+    if (arrayOfDaysInMonth.length > 0) {
       let arr = [];
       for (let i = 0; i < 7; i++) {
-        if (daysArr[i]) {
-          arr.push(daysArr[i]);
+        if (arrayOfDaysInMonth[i]) {
+          arr.push(arrayOfDaysInMonth[i]);
         } else {
           arr.push('');
         }
       }
-      weeksArr.push(arr);
+      arrayOfWeeks.push(arr);
     }
-    console.log('WEEKARRAY:', weeksArr);
-    return weeksArr;    
+    return arrayOfWeeks;    
   }
 
   render() {
     return (
       <div className='wrapper'>
           <div className='bar'> 
-            <button className='button' onClick={() => this.monthDecrement()}>{'<'}</button> 
-            <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
-            <button className='button' onClick={() => this.monthIncrement()}>{'>'}</button> 
+            <button className='button' onClick={() => this.monthDecrementClickHandler()}>{'<'}</button> 
+            <span>{this.getCurrentMonthWord() + ' ' + this.getCurrentYear()}</span> 
+            <button className='button' onClick={() => this.monthIncrementClickHandler()}>{'>'}</button> 
         </div>
         <Month arrOfWeeks={this.getArrayOfWeeks()} events={this.state.events} />
       </div>
