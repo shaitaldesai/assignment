@@ -3,7 +3,7 @@ import Week from './Week.js';
 import './App.css';
 
 const Month = ({ arrOfWeeks, events }) => {
-//create an eventsObjectect with dates as keys, each key  pointing to an array of event titles
+//create an bject from array of events, with launch dates as keys for easy lookup for all the events for a day
   let eventsObject = {}; 
   events.forEach(event => {
     let date = event.launch_date.slice(8, 10);
@@ -18,27 +18,6 @@ const Month = ({ arrOfWeeks, events }) => {
       eventsObject[date].push(event);
     }
   });
-
-  // const findEventsForDay = (day) => {
-  //   let eventTitle;
-  //   if (eventsObject.hasOwnProperty(day)) {
-  //     eventTitle = eventsObject[day].map(data => {
-  //       return data.title;
-  //     });
-  //   }
-  //   if(eventTitle) {
-  //     eventTitle = eventTitle.join(', ');
-  //   }
-  //   return eventTitle;
-  // };
-
-  // const findCellsToBePopulated = (day) => {
-  //   if (day === '') {
-  //     return null;
-  //   } else {
-  //     return day;
-  //   }
-  // };
   
   return (
     <div>
@@ -59,42 +38,4 @@ const Month = ({ arrOfWeeks, events }) => {
 
 export default Month;
 
-/**
-
-        <Week weekArr={week} eventsObject={eventsObject} key={week.toString()} />
-
-
-        <div className="row" key={week.toString()}>
-          <div className={week[0] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[0])}
-            <div>{findEventsForDay(week[0])}</div>
-          </div>
-          <div className={week[1] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[1])}
-            <div>{findEventsForDay(week[1])}</div>
-          </div>
-          <div className={week[2] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[2])}
-            <div>{findEventsForDay(week[2])}</div>
-          </div>
-          <div className={week[3] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[3])}
-            <div>{findEventsForDay(week[3])}</div>
-          </div>
-          <div className={week[4] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[4])}
-            <div>{findEventsForDay(week[4])}</div>
-          </div>
-          <div className={week[5] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[5])}
-            <div>{findEventsForDay(week[5])}</div>
-          </div>
-          <div className={week[6] === '' ? 'greyBox' : 'box'}>
-            {findCellsToBePopulated(week[6])}
-            <div>{findEventsForDay(week[6])}</div>
-          </div>
-        </div>
-
-
-  **/
 
