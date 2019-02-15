@@ -1,6 +1,6 @@
 .wrapper {
   margin: auto;
-  margin-top: 8%;
+  margin-top: 6%;
   width: 80%;
 }
 .row {
@@ -8,7 +8,7 @@
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: minmax(7);
 }
-.one {
+.box {
   border: 1px solid #ADD8E6;
   min-height: 100px;
   overflow: auto;
@@ -24,13 +24,26 @@
   color: #67818a;
 }
 .bar {
-  margin-bottom: 2%;
+  width: 100%;
+  margin-left: 40%;
+  margin-right: 45%;
+}
+.button-container {
+   width: 10%;  
 }
 .button {
   background-color: #ADD8E6;
   font-weight: 700;
   font-size: 1.25em;
   margin: 1%;
+}
+.greyBox{
+  background-color: #deeff5;
+  border: 1px solid #ADD8E6;
+  min-height: 100px;
+  overflow: auto;
+  font-size: .75em;
+  font-weight: 500;
 }
 
 
