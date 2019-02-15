@@ -44,13 +44,11 @@ class App extends Component {
     }
     //
     this.fetch(url, events => {
-      console.log('FETCH:', events);
       this.setState({
         currentTime: time,
         events: events
       });
       window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
-      console.log('URL:', window.location);
     });
   }
 
@@ -92,7 +90,6 @@ class App extends Component {
   }
 
   getTotalDaysInMonth (year, month) {
-    console.log('DAYSINMONTH:', new Date(year, month, 0).getDate());
     return new Date(year, month, 0).getDate();
   }
 
