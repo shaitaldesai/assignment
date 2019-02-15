@@ -19,7 +19,7 @@ const Week = ({ weekArr, eventsObject }) => {
 	return (
     <div className='row'>
       {weekArr.map(day => (
-        <div className={day === '' ? 'greyBox' : 'box'}>
+        <div className={day === '' ? 'greyBox' : 'box'} >
           {day === '' ? null : day}
           <div>{findAllEventsForDay(day)}</div>
         </div> 

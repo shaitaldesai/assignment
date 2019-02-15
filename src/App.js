@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import Month from './Month.js';
-import $ from 'jquery';
 import './App.css';
+import moment from 'moment';
+// import $ from 'jquery';
 
 class App extends Component {
   constructor (props) {
@@ -54,20 +54,17 @@ class App extends Component {
       console.log('URL:', window.location);
     });
   }
+
   //fetching events json data from node server
   fetch (url, cb) {
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      success: (events) => {
-        cb(events);
-      },
-      error: function (xhr, err) {
-        console.log('err', err);
-      }
+    fetch(url)
+    .then(events => {
+      return events.json();
     })
-  }
+    .then(jsonEvents => {
+      cb(jsonEvents);
+    })
+  } 
 
   getCurrentDay () {
     return this.state.currentTime.slice(0, 3);
@@ -107,23 +104,18 @@ class App extends Component {
     let day = `${month}${date}${year}`;
     let currentState = moment(day, "MMDDYYYY").subtract(1, 'months').format('llll');
     this.setState({currentTime: currentState}, (prev, prop) => {
-      console.log('PREV:', prev);
-      $.ajax({
-        url: `/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`,
-        type: 'GET',
-        dataType: 'json',
-        success: (events) => {
-          this.setState({
-            events: events
-          })
-          window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
-          },
-        error: function (xhr, err) {
-          console.log('err', err);
-        }
+
+      fetch(`/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`)
+      .then(events => {
+        return events.json();
+      })
+      .then(jsonEvents => {
+        this.setState({
+          events: jsonEvents
+        })
+        window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`);       
       })
     })
-    console.log('After-DECREMENT:', currentState);
   }
 
   monthIncrementClickHandler () {
@@ -135,23 +127,19 @@ class App extends Component {
     year = this.getCurrentYear();
     month = this.getCurrentMonth();
     this.setState({currentTime: currentState}, (prev, prop) => {
-      console.log('PREV:', prev);
-      $.ajax({
-        url: `/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`,
-        type: 'GET',
-        dataType: 'json',
-        success: (events) => {
-          this.setState({
-            events: events
-          })
-          window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`); 
-        },
-        error: function (xhr, err) {
-          console.log('err', err);
-        }
+      fetch(`/events?year=${this.getCurrentYear()}&month=${this.getCurrentMonth()}`)
+      .then(events => {
+        return events.json();
+      })
+      .then(jsonEvents => {
+        this.setState({
+          events: jsonEvents
+        })
+        window.history.replaceState(null, null, `/${this.getCurrentYear()}/${this.getCurrentMonth()}`);       
       })
     })
   }
+
   //determining wich day of the week, the first day of the current month falls on
   getFirstDayOfMonth () {
     let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
