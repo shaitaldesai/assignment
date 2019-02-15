@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 // import events from './events.json';
-import Week from './Week.js';
+import Month from './Month.js';
 import $ from 'jquery';
 import './App.css';
 
@@ -9,12 +9,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      currentTime: moment().format('llll'),
-      // currentTime: window.location.pathname ? moment(`${window.location.pathname}`, "/YYYY/MM").format('llll') : moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
-      // url: window.location.pathname ? window.location.pathname : null,
-      // url: window.location.pathname ? 
-      // `/events?year=${window.location.pathname.slice(1, 5)}&month=${window.location.pathname.slice(6)}` : 
-      // `/events?year=${this.getYear()}&month=${this.getMonth()}`,
+      currentTime: moment().format('llll'), // sample format: Tue, Feb 12, 2019 5:09 PM
       events: []
     }
     this.getCurrentTime = this.getCurrentTime.bind(this);
@@ -29,7 +24,6 @@ class App extends Component {
     this.getFirstDayOfMonth = this.getFirstDayOfMonth.bind(this);
     this.getArrayOfWeeks = this.getArrayOfWeeks.bind(this);
     this.fetch = this.fetch.bind(this);
-    // this.getEventsByMonth = this.getEventsByMonth.bind(this);
     this.months =  {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6, 'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
     this.weekDays = {'Sun': 1, 'Mon': 2, 'Tue': 3, 'Wed': 4, 'Thu': 5, 'Fri': 6, 'Sat': 7};
   }
@@ -61,16 +55,11 @@ class App extends Component {
       window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
       console.log('URL:', window.location);
     });
-      // window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
   }
 
   fetch (url, cb) {
-    // let year = this.getYear();
-    // let month = this.getMonth(); 
     $.ajax({
       url: url,
-      // url: `/events?year=${this.state.url.slice(1, 5)}&month=${this.state.url.slice(6)}` || `/events?year=${this.getYear()}&month=${this.getMonth()}`,
-      // url: this.state.url,
       type: 'GET',
       dataType: 'json',
       success: (events) => {
@@ -97,7 +86,6 @@ class App extends Component {
 
   getMonth () {
     let monthStr = this.state.currentTime.slice(5, 8);
-    console.log('MONTHSTR:', monthStr);
     let month = this.months[monthStr];
     if (month < 10) {
       return `0${month}`;
@@ -112,11 +100,6 @@ class App extends Component {
 
   getYear () {
     return this.state.currentTime.split(' ')[3];
-    // if (this.getDate() < 10) {
-    //   return this.state.currentTime.slice(12, 16);
-    // } else {
-    //   return this.state.currentTime.slice(13, 17);
-    // }
   }
 
   getDaysInMonth (year, month) {
@@ -134,19 +117,13 @@ class App extends Component {
       console.log('PREV:', prev);
       $.ajax({
         url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
-        // url: this.state.url,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
           this.setState({
             events: events
           })
-          // if (window.pushState) {
-            window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
-            // window.history.pushState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
-          // } else {
-          //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
-          // }
+          window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
           },
         error: function (xhr, err) {
           console.log('err', err);
@@ -168,19 +145,13 @@ class App extends Component {
       console.log('PREV:', prev);
       $.ajax({
         url: `/events?year=${this.getYear()}&month=${this.getMonth()}`,
-        // url: this.state.url,
         type: 'GET',
         dataType: 'json',
         success: (events) => {
           this.setState({
             events: events
           })
-          // if (window.pushState) {
-            window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
-            // window.history.pushState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
-          // } else {
-          //   document.location.href = `/${this.getYear()}/${this.getMonth()}`;
-          // }
+          window.history.replaceState(null, null, `/${this.getYear()}/${this.getMonth()}`); 
         },
         error: function (xhr, err) {
           console.log('err', err);
@@ -192,7 +163,6 @@ class App extends Component {
 
   getFirstDayOfMonth () {
     let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
-    // console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);
     return this.weekDays[firstDay];
   }
 
@@ -230,32 +200,14 @@ class App extends Component {
   }
 
   render() {
-    // console.log('MOMENT:', moment('/abcd/02', "/YYYY/MM").format('/YYYY/MM') === '/abcd/02', moment('/abcd/02', "/YYYY/MM").format('/YYYY/MM'));
-    // console.log('DATE:', this.getDate('Tue, Feb 2, 2019 5:09 PM'))
-    // console.log('LOCATION:', window.location.pathname ? moment(`${window.location.pathname}`, "/YYYY/MM").format('llll') : moment().format('llll'));
-    // console.log('FORMATTED STATE:',  this.state.events[0].launch_date.slice(5, 7), this.getEventsByMonth());
-    // let firstDay = moment(this.state.currentTime).startOf('month')._d.toString().slice(0, 3);
-    // console.log('FIRSTDAY:', firstDay, this.weekDays[firstDay]);
-      // let currentDay = moment().format('llll');
-      // console.log('CURRENT:', currentDay);
-      // let daysInMonth = this.getDaysInMonth(this.getYear(), this.getMonth());
-      // console.log('DAYSINMONTH:', this.getYear(), this.getMonth(), daysInMonth);
-      // let date = this.getMonth() + this.getDate() + this.getYear();
-      // date = moment(date, "MMDDYYYY").subtract(1, 'months').format('llll');
-      // // date = moment(date, "MMDDYYYY").format('llll');
-      // date = this.getArrayOfWeeks();
-      // console.log('DATE:', date);
     return (
       <div className='wrapper'>
-        <div className='bar'> 
-          <button className='button' onClick={() => this.monthDecrement()}>{'<'}</button> 
-          <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
-          <button className='button' onClick={() => this.monthIncrement()}>{'>'}</button> 
-          <Week arrOfWeeks={this.getArrayOfWeeks()} startOfMonth={this.getFirstDayOfMonth} events={this.state.events} />
+          <div className='bar'> 
+            <button className='button' onClick={() => this.monthDecrement()}>{'<'}</button> 
+            <span>{this.getMonthStr() + ' ' + this.getYear()}</span> 
+            <button className='button' onClick={() => this.monthIncrement()}>{'>'}</button> 
         </div>
-        <div>
-
-        </div>
+        <Month arrOfWeeks={this.getArrayOfWeeks()} events={this.state.events} />
       </div>
     );
   }

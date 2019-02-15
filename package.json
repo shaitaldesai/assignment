@@ -14,7 +14,7 @@
     "react-scripts": "2.1.5"
   },
   "scripts": {
-    "npm-start": "node server/index.js",
+    "npm-start": "nodemon server/index.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
