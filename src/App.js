@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Month from './Month.js';
 import './App.css';
 import moment from 'moment';
-// import $ from 'jquery';
 
 class App extends Component {
   constructor (props) {
