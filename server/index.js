@@ -1,12 +1,10 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const events = require('../src/events.json');
 let app = express();
 
 app.use(bodyParser.json());
-app.use(cors());
 
 // Static file declaration
 app.use(express.static(path.join(__dirname, 'build')));
