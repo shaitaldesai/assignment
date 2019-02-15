@@ -1,6 +1,6 @@
 .wrapper {
   margin: auto;
-  margin-top: 6%;
+  margin-top: 4%;
   width: 80%;
 }
 .row {
@@ -38,7 +38,7 @@
   margin: 1%;
 }
 .greyBox{
-  background-color: #deeff5;
+  background-color: #eef7fa;
   border: 1px solid #ADD8E6;
   min-height: 100px;
   overflow: auto;

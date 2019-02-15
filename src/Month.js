@@ -1,6 +1,5 @@
 import React from 'react';
-// import Week from './Week.js';
-// import $ from 'jquery';
+import Week from './Week.js';
 import './App.css';
 
 const Month = ({ arrOfWeeks, events }) => {
@@ -20,26 +19,26 @@ const Month = ({ arrOfWeeks, events }) => {
     }
   });
 
-  const findEventsForDay = (day) => {
-    let eventTitle;
-    if (eventsObject.hasOwnProperty(day)) {
-      eventTitle = eventsObject[day].map(data => {
-        return data.title;
-      });
-    }
-    if(eventTitle) {
-      eventTitle = eventTitle.join(', ');
-    }
-    return eventTitle;
-  };
+  // const findEventsForDay = (day) => {
+  //   let eventTitle;
+  //   if (eventsObject.hasOwnProperty(day)) {
+  //     eventTitle = eventsObject[day].map(data => {
+  //       return data.title;
+  //     });
+  //   }
+  //   if(eventTitle) {
+  //     eventTitle = eventTitle.join(', ');
+  //   }
+  //   return eventTitle;
+  // };
 
-  const findCellsToBePopulated = (day) => {
-    if (day === '') {
-      return null;
-    } else {
-      return day;
-    }
-  };
+  // const findCellsToBePopulated = (day) => {
+  //   if (day === '') {
+  //     return null;
+  //   } else {
+  //     return day;
+  //   }
+  // };
   
   return (
     <div>
@@ -53,6 +52,18 @@ const Month = ({ arrOfWeeks, events }) => {
         <div className="two">{'Sat'}</div>
       </div>
       {arrOfWeeks.map(week => (
+        <Week weekArr={week} eventsObject={eventsObject} key={week.toString()} />
+      ))}
+    </div>)
+}
+
+export default Month;
+
+/**
+
+        <Week weekArr={week} eventsObject={eventsObject} key={week.toString()} />
+
+
         <div className="row" key={week.toString()}>
           <div className={week[0] === '' ? 'greyBox' : 'box'}>
             {findCellsToBePopulated(week[0])}
@@ -83,51 +94,6 @@ const Month = ({ arrOfWeeks, events }) => {
             <div>{findEventsForDay(week[6])}</div>
           </div>
         </div>
-      ))}
-    </div>)
-}
-
-export default Month;
-
-/**
-
-        <Week weekArr={week} eventsObject={eventsObject} key={week.toString()} />
-
-
-      {arrOfWeeks.map(wee
-      k => (
-        <div className="row" key={week.toString()}>
-          <div className="one">
-            {findCellsToBePopulated(week[0])}
-            <div>{findEventsForDay(week[0])}</div>
-          </div>
-          <div className="two">
-            {findCellsToBePopulated(week[1])}
-            <div>{findEventsForDay(week[1])}</div>
-          </div>
-          <div className="three">
-            {findCellsToBePopulated(week[2])}
-            <div>{findEventsForDay(week[2])}</div>
-          </div>
-          <div className="four">
-            {findCellsToBePopulated(week[3])}
-            <div>{findEventsForDay(week[3])}</div>
-          </div>
-          <div className="five">
-            {findCellsToBePopulated(week[4])}
-            <div>{findEventsForDay(week[4])}</div>
-          </div>
-          <div className="six">
-            {findCellsToBePopulated(week[5])}
-            <div>{findEventsForDay(week[5])}</div>
-          </div>
-          <div className="seven">
-            {findCellsToBePopulated(week[6])}
-            <div>{findEventsForDay(week[6])}</div>
-          </div>
-        </div>
-      ))}
-  </div>) 
 
 
   **/

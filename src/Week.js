@@ -1,9 +1,7 @@
 import React from 'react';
-// import Day from './Day.js';
-// import $ from 'jquery';
 import './App.css';
 
-const Week = ({ week, eventsObject }) => {
+const Week = ({ weekArr, eventsObject }) => {
  
   const findEventsForDay = (day) => {
     let eventTitle;
@@ -20,8 +18,8 @@ const Week = ({ week, eventsObject }) => {
 
 	return (
     <div className='row'>
-      {week.map(day => (
-        <div className='box'>
+      {weekArr.map(day => (
+        <div className={day === '' ? 'greyBox' : 'box'}>
           {day === '' ? null : day}
           <div>{findEventsForDay(day)}</div>
         </div> 
@@ -29,7 +27,7 @@ const Week = ({ week, eventsObject }) => {
     </div>)
 }
 
-// export default Week;
+export default Week;
 
 /**
       
